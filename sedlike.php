@@ -3,30 +3,30 @@
 $substitution = false;
  
 if (count($argv) == 1) {
-   printHelp();
-   return;
+    printHelp();
+    return;
 }
  
 for ($i = 1; $i < count($argv); $i++) {
-   if (substr($argv[$i], 0, 1) === "-") {
-       $arguments['options'][] = $argv[$i];
-       continue;
-   }
- 
-   if (substr($argv[$i], 0, 2) === "s/") {
-       $substitution = true;
-       $arguments['replace'] = getReplaceArgumets($argv[$i]);
-       continue;
-   }
- 
-   if ($substitution && !isset($arguments['inFile'])) {
-       $arguments['inFile'] = $argv[$i];
-       continue;
-   }
- 
-   if (isset($arguments['inFile'])) {
-       $arguments['toFile'] = $argv[$i];
-   }
+    if (substr($argv[$i], 0, 1) === "-") {
+        $arguments['options'][] = $argv[$i];
+        continue;
+    }
+    
+    if (substr($argv[$i], 0, 2) === "s/") {
+        $substitution = true;
+        $arguments['replace'] = getReplaceArgumets($argv[$i]);
+        continue;
+    }
+    
+    if ($substitution && !isset($arguments['inFile'])) {
+        $arguments['inFile'] = $argv[$i];
+        continue;
+    }
+    
+    if (isset($arguments['inFile'])) {
+        $arguments['toFile'] = $argv[$i];
+    }
 }
 
 replace($arguments);
@@ -45,49 +45,49 @@ function printHelp()
  
 function getReplaceArgumets($args)
 {
-   $fields = explode('/', $args);
- 
-   $arguments['from'] = $fields[1];
-   $arguments['to']   = $fields[2];
-   return $arguments;
+    $fields = explode('/', $args);
+    
+    $arguments['from'] = $fields[1];
+    $arguments['to']   = $fields[2];
+    return $arguments;
 }
  
 function replace(array $arguments)
 {
-   $inPlace = false;
- 
-   if (!empty($arguments['options']) && in_array('-i', $arguments['options'])) {
-       $inPlace = true;
-   }
- 
-   $fileFrom    = getFileFrom($arguments);
-   $fileTo      = getFileTo($arguments);
-   $content     = file_get_contents("$fileFrom");
-   $replaceFrom = $arguments['replace']['from'];
-   $replaceTo   = $arguments['replace']['to'];
- 
-   $output = str_replace($replaceFrom, $replaceTo, $content);
+    $inPlace = false;
+    
+    if (!empty($arguments['options']) && in_array('-i', $arguments['options'])) {
+        $inPlace = true;
+    }
+    
+    $fileFrom    = getFileFrom($arguments);
+    $fileTo      = getFileTo($arguments);
+    $content     = file_get_contents("$fileFrom");
+    $replaceFrom = $arguments['replace']['from'];
+    $replaceTo   = $arguments['replace']['to'];
+    
+    $output = str_replace($replaceFrom, $replaceTo, $content);
 
-   file_put_contents("$fileTo", $output);
- 
-   if (!$inPlace) {
-       echo $output;
-   }
+    file_put_contents("$fileTo", $output);
+    
+    if (!$inPlace) {
+        echo $output;
+    }
 }
  
 function getFileFrom($arguments)
 {
-   if (file_exists($arguments['inFile'])) {
-       return $arguments['inFile'];
-   }
+    if (file_exists($arguments['inFile'])) {
+        return $arguments['inFile'];
+    }
 }
  
 function getFileTo(array $arguments)
 {
-   if (isset($arguments['toFile'])) {
-       return $arguments['toFile'];
-   } 
- 
-   return $arguments['inFile'];
+    if (isset($arguments['toFile'])) {
+        return $arguments['toFile'];
+    } 
+    
+    return $arguments['inFile'];
 }
 
