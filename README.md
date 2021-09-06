@@ -1,1 +1,1 @@
-# sed-like-editor
+Run php sedlike.php to see help with further instructions
